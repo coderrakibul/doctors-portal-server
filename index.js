@@ -44,7 +44,7 @@ async function run() {
             res.send(services);
         });
 
-        app.get('/user', async(req, res) => {
+        app.get('/user', verifyJWT, async (req, res) => {
             const users = await userCollection.find().toArray();
             res.send(users);
         })
@@ -58,7 +58,7 @@ async function run() {
                 $set: user,
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30d' });
             res.send({ result, token });
         })
 
@@ -93,13 +93,13 @@ async function run() {
         app.get('/booking', verifyJWT, async (req, res) => {
             const patient = req.query.patient;
             const decodedEmail = req.decoded.email;
-            if(patient === decodedEmail){
+            if (patient === decodedEmail) {
                 const query = { patient: patient };
-            const bookings = await bookingCollection.find(query).toArray();
-            return res.send(bookings);
+                const bookings = await bookingCollection.find(query).toArray();
+                return res.send(bookings);
             }
-            else{
-                return res.status(403).send({message: 'Forbidden Access'});
+            else {
+                return res.status(403).send({ message: 'Forbidden Access' });
             }
 
         })
