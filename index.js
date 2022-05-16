@@ -11,7 +11,8 @@ app.use(cors());
 app.use(express.json());
 
 
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.twtll.mongodb.net/myFirstDatabase?retryWrites=true&w=majority`;
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.wnxnw.mongodb.net/?retryWrites=true&w=majority`;
+
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
@@ -88,8 +89,7 @@ async function run() {
             res.send({ result, token });
         })
 
-        // Warning: This is not the proper way to query multiple collection. 
-        // After learning more about mongodb. use aggregate, lookup, pipeline, match, group
+
         app.get('/available', async (req, res) => {
             const date = req.query.date;
 
@@ -115,16 +115,6 @@ async function run() {
 
             res.send(services);
         })
-
-        /**
-         * API Naming Convention
-         * app.get('/booking') // get all bookings in this collection. or get more than one or by filter
-         * app.get('/booking/:id') // get a specific booking 
-         * app.post('/booking') // add a new booking
-         * app.patch('/booking/:id) //
-         * app.put('/booking/:id') // upsert ==> update (if exists) or insert (if doesn't exist)
-         * app.delete('/booking/:id) //
-        */
 
         app.get('/booking', verifyJWT, async (req, res) => {
             const patient = req.query.patient;
