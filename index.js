@@ -41,7 +41,7 @@ async function run() {
 
         app.get('/service', async (req, res) => {
             const query = {};
-            const cursor = serviceCollection.find(query);
+            const cursor = serviceCollection.find(query).project({name: 1});
             const services = await cursor.toArray();
             res.send(services);
         });
@@ -85,7 +85,7 @@ async function run() {
                 $set: user,
             };
             const result = await userCollection.updateOne(filter, updateDoc, options);
-            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+            const token = jwt.sign({ email: email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '30d' })
             res.send({ result, token });
         })
 
