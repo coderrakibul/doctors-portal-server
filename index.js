@@ -150,9 +150,9 @@ async function run() {
         app.get('/booking/:id', verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            const bookings = await bookingCollection.findOne(query);
-            res.send(bookings);
-        });
+            const booking = await bookingCollection.findOne(query);
+            res.send(booking);
+        })
 
         app.post('/booking', async (req, res) => {
             const booking = req.body;
@@ -162,7 +162,25 @@ async function run() {
                 return res.send({ success: false, booking: exists })
             }
             const result = await bookingCollection.insertOne(booking);
+            console.log('sending email');
+            sendAppointmentEmail(booking);
             return res.send({ success: true, result });
+        });
+
+        app.patch('/booking/:id', verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const payment = req.body;
+            const filter = { _id: ObjectId(id) };
+            const updatedDoc = {
+                $set: {
+                    paid: true,
+                    transactionId: payment.transactionId
+                }
+            }
+
+            const result = await paymentCollection.insertOne(payment);
+            const updatedBooking = await bookingCollection.updateOne(filter, updatedDoc);
+            res.send(updatedBooking);
         });
 
         app.get('/doctor', verifyJWT, verifyAdmin, async (req, res) => {
