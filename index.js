@@ -90,7 +90,7 @@ function sendPaymentConfirmationEmail(booking) {
         <h3>Our Address</h3>
         <p>Andor Killa Bandorban</p>
         <p>Bangladesh</p>
-        <a href="https://web.programming-hero.com/">unsubscribe</a>
+        <<a href="https://doctors-portal-d95b1.web.app/">Back to Website</a>
       </div>
     `
     };
